@@ -69,43 +69,6 @@ yarn dev
 
 6. Open your browser and navigate to `http://localhost:5173`
 
-## Project Structure
-
-fitu-instructor/
-├── src/
-│ ├── components/ # Reusable UI components
-│ │ ├── AssignExerciseModal.jsx
-│ │ ├── ConfirmationModal.jsx
-│ │ ├── EditAssignmentModal.jsx
-│ │ ├── ErrorBoundary.jsx
-│ │ ├── NavigationBar.jsx
-│ │ ├── ProtectedRoute.jsx
-│ │ ├── StudentDetailsModal.jsx
-│ │ ├── UpdateStatusModal.jsx
-│ │ └── ViewPerformedExercisesModal.jsx
-│ ├── contexts/ # React context providers
-│ │ └── AuthContext.jsx
-│ ├── config/ # Configuration files
-│ │ └── firebase.js
-│ ├── pages/ # Page components
-│ │ ├── AssignedExercises.jsx
-│ │ ├── ClassRoster.jsx
-│ │ ├── Dashboard.jsx
-│ │ ├── Login.jsx
-│ │ ├── MyRoster.jsx
-│ │ ├── Profile.jsx
-│ │ └── Students.jsx
-│ ├── images/ # Static images
-│ │ └── logo-fitu.png
-│ ├── App.jsx # Root component
-│ └── main.jsx # Entry point
-├── public/ # Static files
-├── .env # Environment variables
-├── index.html # HTML entry point
-├── package.json # Project dependencies and scripts
-├── tailwind.config.js # Tailwind CSS configuration
-└── vite.config.js # Vite configuration
-
 
 ## Available Scripts
 
