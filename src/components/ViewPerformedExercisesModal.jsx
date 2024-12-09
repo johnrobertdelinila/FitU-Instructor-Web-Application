@@ -2,7 +2,12 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
-export default function ViewPerformedExercisesModal({ assignmentId, exerciseName, onClose }) {
+export default function ViewPerformedExercisesModal({ 
+  assignmentId, 
+  exerciseName, 
+  onClose,
+  onExerciseDeleted 
+}) {
   const [performedExercises, setPerformedExercises] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -90,6 +95,9 @@ export default function ViewPerformedExercisesModal({ assignmentId, exerciseName
       setPerformedExercises(exercises => 
         exercises.filter(exercise => exercise.id !== exerciseId)
       );
+
+      // Notify parent component to update completion count
+      onExerciseDeleted();
     } catch (error) {
       console.error('Error deleting exercise:', error);
       setError('Failed to delete exercise');

@@ -109,6 +109,26 @@ export default function AssignedExercises() {
     }
   };
 
+  const handleExerciseDeleted = async (assignmentId) => {
+    try {
+      // Fetch the new count of performed exercises
+      const performedRef = collection(db, `exerciseAssignments/${assignmentId}/performedExercises`);
+      const performedSnapshot = await getDocs(performedRef);
+      
+      // Update the assignments state with new count
+      setAssignments(currentAssignments => 
+        currentAssignments.map(assignment => 
+          assignment.id === assignmentId 
+            ? { ...assignment, completionCount: performedSnapshot.size }
+            : assignment
+        )
+      );
+    } catch (error) {
+      console.error('Error updating completion count:', error);
+      setError('Failed to update completion count');
+    }
+  };
+
   const filteredAssignments = assignments.filter(assignment => 
     String(assignment.exerciseName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     String(assignment.repetitions || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -333,6 +353,7 @@ export default function AssignedExercises() {
             assignmentId={selectedAssignment.id}
             exerciseName={selectedAssignment.exerciseName}
             onClose={() => setSelectedAssignment(null)}
+            onExerciseDeleted={() => handleExerciseDeleted(selectedAssignment.id)}
           />
         )}
 
