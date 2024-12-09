@@ -31,3 +31,103 @@ FitU is a web application designed for DMMMSU instructors to manage PathFit 101 
 ## Getting Started
 
 1. Clone the repository:
+```bash
+git clone https://github.com/johnrobertdelinila/FitU-Instructor-Web-Application.git
+cd FitU-Instructor-Web-Application
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Create a Firebase project and get your configuration:
+- Go to Firebase Console
+- Create a new project
+- Enable Authentication (Google provider)
+- Enable Firestore Database
+- Get your Firebase configuration object
+
+4. Create a `.env` file in the root directory with your Firebase configuration:
+```env
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
+
+5. Start the development server:
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+6. Open your browser and navigate to `http://localhost:5173`
+
+## Project Structure
+
+fitu-instructor/
+├── src/
+│ ├── components/ # Reusable UI components
+│ │ ├── AssignExerciseModal.jsx
+│ │ ├── ConfirmationModal.jsx
+│ │ ├── EditAssignmentModal.jsx
+│ │ ├── ErrorBoundary.jsx
+│ │ ├── NavigationBar.jsx
+│ │ ├── ProtectedRoute.jsx
+│ │ ├── StudentDetailsModal.jsx
+│ │ ├── UpdateStatusModal.jsx
+│ │ └── ViewPerformedExercisesModal.jsx
+│ ├── contexts/ # React context providers
+│ │ └── AuthContext.jsx
+│ ├── config/ # Configuration files
+│ │ └── firebase.js
+│ ├── pages/ # Page components
+│ │ ├── AssignedExercises.jsx
+│ │ ├── ClassRoster.jsx
+│ │ ├── Dashboard.jsx
+│ │ ├── Login.jsx
+│ │ ├── MyRoster.jsx
+│ │ ├── Profile.jsx
+│ │ └── Students.jsx
+│ ├── images/ # Static images
+│ │ └── logo-fitu.png
+│ ├── App.jsx # Root component
+│ └── main.jsx # Entry point
+├── public/ # Static files
+├── .env # Environment variables
+├── index.html # HTML entry point
+├── package.json # Project dependencies and scripts
+├── tailwind.config.js # Tailwind CSS configuration
+└── vite.config.js # Vite configuration
+
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- DMMMSU for the inspiration and support
+- PathFit 101 program
+- All contributors and users of the application
