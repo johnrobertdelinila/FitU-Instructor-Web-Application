@@ -52,7 +52,7 @@ export default function ViewPerformedExercisesModal({ assignmentId, exerciseName
 
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg max-w-3xl w-full max-h-[80vh] overflow-hidden">
+      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[80vh] overflow-hidden">
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-gray-900">
@@ -87,6 +87,9 @@ export default function ViewPerformedExercisesModal({ assignmentId, exerciseName
                       Student Name
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Exercise Name
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Duration
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -99,9 +102,12 @@ export default function ViewPerformedExercisesModal({ assignmentId, exerciseName
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {performedExercises.map((exercise) => (
-                    <tr key={exercise.id}>
+                    <tr key={exercise.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {exercise.studentName}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {exercise.exercise_name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {exercise.duration}
