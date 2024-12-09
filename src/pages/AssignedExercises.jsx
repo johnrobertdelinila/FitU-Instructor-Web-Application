@@ -17,6 +17,7 @@ export default function AssignedExercises() {
   const [editingAssignment, setEditingAssignment] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [deletingAssignmentId, setDeletingAssignmentId] = useState(null);
+  const [updatingStatus, setUpdatingStatus] = useState(null);
 
   useEffect(() => {
     fetchAssignments();
@@ -31,7 +32,6 @@ export default function AssignedExercises() {
       );
       const querySnapshot = await getDocs(q);
       
-      // Fetch assignments and their completion counts
       const assignmentsPromises = querySnapshot.docs.map(async (doc) => {
         const assignmentData = doc.data();
         const performedRef = collection(db, `exerciseAssignments/${doc.id}/performedExercises`);
@@ -40,7 +40,8 @@ export default function AssignedExercises() {
         return {
           id: doc.id,
           ...assignmentData,
-          completionCount: performedSnapshot.size
+          completionCount: performedSnapshot.size,
+          isCompleted: assignmentData.isCompleted || false
         };
       });
 
@@ -126,6 +127,30 @@ export default function AssignedExercises() {
     } catch (error) {
       console.error('Error updating completion count:', error);
       setError('Failed to update completion count');
+    }
+  };
+
+  const handleToggleCompletion = async (assignmentId, currentStatus) => {
+    setUpdatingStatus(assignmentId);
+    try {
+      const assignmentRef = doc(db, 'exerciseAssignments', assignmentId);
+      await updateDoc(assignmentRef, {
+        isCompleted: !currentStatus
+      });
+
+      // Update local state
+      setAssignments(currentAssignments => 
+        currentAssignments.map(assignment => 
+          assignment.id === assignmentId 
+            ? { ...assignment, isCompleted: !currentStatus }
+            : assignment
+        )
+      );
+    } catch (error) {
+      console.error('Error updating assignment status:', error);
+      setError('Failed to update assignment status');
+    } finally {
+      setUpdatingStatus(null);
     }
   };
 
@@ -263,9 +288,50 @@ export default function AssignedExercises() {
                         </div>
                       </div>
                     </div>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
-                      Assigned
-                    </span>
+                    <button
+                      onClick={() => handleToggleCompletion(assignment.id, assignment.isCompleted)}
+                      disabled={updatingStatus === assignment.id}
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors ${
+                        assignment.isCompleted
+                          ? 'bg-green-100 text-green-800 hover:bg-green-200'
+                          : 'bg-primary-100 text-primary-800 hover:bg-primary-200'
+                      }`}
+                    >
+                      {updatingStatus === assignment.id ? (
+                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      ) : (
+                        <>
+                          <svg 
+                            className={`-ml-0.5 mr-1.5 h-3 w-3 ${
+                              assignment.isCompleted ? 'text-green-600' : 'text-primary-600'
+                            }`} 
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            stroke="currentColor"
+                          >
+                            {assignment.isCompleted ? (
+                              <path 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round" 
+                                strokeWidth={2} 
+                                d="M5 13l4 4L19 7"
+                              />
+                            ) : (
+                              <path 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round" 
+                                strokeWidth={2} 
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
+                            )}
+                          </svg>
+                          {assignment.isCompleted ? 'Completed' : 'Assigned'}
+                        </>
+                      )}
+                    </button>
                   </div>
                   <div className="mt-6 flex justify-end space-x-3">
                     {assignment.completionCount === 0 && (
