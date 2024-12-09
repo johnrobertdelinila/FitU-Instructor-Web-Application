@@ -30,4 +30,4 @@ FitU is a web application designed for DMMMSU instructors to manage PathFit 101 
 
 ## Getting Started
 
-1. Clone the repository: 
+1. Clone the repository:
