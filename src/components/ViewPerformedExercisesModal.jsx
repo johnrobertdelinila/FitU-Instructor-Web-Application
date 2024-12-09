@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
 export default function ViewPerformedExercisesModal({ assignmentId, exerciseName, onClose }) {
   const [performedExercises, setPerformedExercises] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [updatingId, setUpdatingId] = useState(null);
 
   useEffect(() => {
     fetchPerformedExercises();
@@ -29,14 +30,14 @@ export default function ViewPerformedExercisesModal({ assignmentId, exerciseName
       const performedRef = collection(db, `exerciseAssignments/${assignmentId}/performedExercises`);
       const querySnapshot = await getDocs(performedRef);
       
-      // Fetch all exercises and their corresponding student names
       const exercisesPromises = querySnapshot.docs.map(async (doc) => {
         const exerciseData = doc.data();
         const studentName = await fetchStudentName(exerciseData.uid);
         return {
           id: doc.id,
           ...exerciseData,
-          studentName
+          studentName,
+          isAccomplished: exerciseData.isAccomplished || false
         };
       });
 
@@ -47,6 +48,30 @@ export default function ViewPerformedExercisesModal({ assignmentId, exerciseName
       setError('Failed to load performed exercises');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleToggleAccomplishment = async (exerciseId, currentStatus) => {
+    setUpdatingId(exerciseId);
+    try {
+      const exerciseRef = doc(db, `exerciseAssignments/${assignmentId}/performedExercises/${exerciseId}`);
+      await updateDoc(exerciseRef, {
+        isAccomplished: !currentStatus
+      });
+
+      // Update local state
+      setPerformedExercises(exercises => 
+        exercises.map(exercise => 
+          exercise.id === exerciseId 
+            ? { ...exercise, isAccomplished: !currentStatus }
+            : exercise
+        )
+      );
+    } catch (error) {
+      console.error('Error updating exercise status:', error);
+      setError('Failed to update exercise status');
+    } finally {
+      setUpdatingId(null);
     }
   };
 
@@ -98,6 +123,9 @@ export default function ViewPerformedExercisesModal({ assignmentId, exerciseName
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Date & Time
                     </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -117,6 +145,48 @@ export default function ViewPerformedExercisesModal({ assignmentId, exerciseName
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {exercise.time_and_date?.toDate().toLocaleString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <button
+                          onClick={() => handleToggleAccomplishment(exercise.id, exercise.isAccomplished)}
+                          disabled={updatingId === exercise.id}
+                          className={`group relative p-2 rounded-full transition-colors ${
+                            exercise.isAccomplished 
+                              ? 'bg-green-100 hover:bg-green-200' 
+                              : 'bg-gray-100 hover:bg-gray-200'
+                          }`}
+                        >
+                          {updatingId === exercise.id ? (
+                            <svg className="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                          ) : (
+                            <svg 
+                              className={`h-5 w-5 ${
+                                exercise.isAccomplished ? 'text-green-600' : 'text-gray-400'
+                              }`} 
+                              fill="none" 
+                              viewBox="0 0 24 24" 
+                              stroke="currentColor"
+                            >
+                              <path 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round" 
+                                strokeWidth={2} 
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                          )}
+                          <span className="sr-only">
+                            {exercise.isAccomplished ? 'Mark as incomplete' : 'Mark as complete'}
+                          </span>
+                          
+                          {/* Tooltip */}
+                          <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
+                            {exercise.isAccomplished ? 'Mark as incomplete' : 'Mark as complete'}
+                          </span>
+                        </button>
                       </td>
                     </tr>
                   ))}
