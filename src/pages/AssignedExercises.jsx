@@ -195,6 +195,94 @@ export default function AssignedExercises() {
             </button>
           </div>
 
+          {/* How-To Guide Section */}
+          <div className="mt-8 bg-white rounded-xl shadow-sm p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-gray-900">How to Assign Exercises</h2>
+              <button
+                className="text-primary-600 hover:text-primary-700 text-sm font-medium flex items-center"
+                onClick={() => document.getElementById('howToGuide').classList.toggle('hidden')}
+              >
+                <svg className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Toggle Guide
+              </button>
+            </div>
+            
+            <div id="howToGuide" className="space-y-4">
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {/* Step 1 */}
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="flex items-center mb-3">
+                    <div className="flex-shrink-0 h-8 w-8 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center">
+                      <span className="font-semibold">1</span>
+                    </div>
+                    <h3 className="ml-3 text-lg font-medium text-gray-900">Create Assignment</h3>
+                  </div>
+                  <p className="text-gray-600">
+                    Click the "Assign Exercise" button at the top of the page to open the assignment form.
+                  </p>
+                </div>
+
+                {/* Step 2 */}
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="flex items-center mb-3">
+                    <div className="flex-shrink-0 h-8 w-8 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center">
+                      <span className="font-semibold">2</span>
+                    </div>
+                    <h3 className="ml-3 text-lg font-medium text-gray-900">Set Details</h3>
+                  </div>
+                  <ul className="text-gray-600 list-disc list-inside space-y-1">
+                    <li>Enter exercise name</li>
+                    <li>Specify number of repetitions</li>
+                    <li>Set due date</li>
+                  </ul>
+                </div>
+
+                {/* Step 3 */}
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="flex items-center mb-3">
+                    <div className="flex-shrink-0 h-8 w-8 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center">
+                      <span className="font-semibold">3</span>
+                    </div>
+                    <h3 className="ml-3 text-lg font-medium text-gray-900">Monitor Progress</h3>
+                  </div>
+                  <ul className="text-gray-600 list-disc list-inside space-y-1">
+                    <li>Track completion status</li>
+                    <li>View student submissions</li>
+                    <li>Mark as completed when done</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Additional Tips */}
+              <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 className="text-blue-800 font-medium mb-2">Pro Tips:</h4>
+                <ul className="text-blue-700 space-y-2">
+                  <li className="flex items-start">
+                    <svg className="h-5 w-5 mr-2 mt-0.5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Use the search bar to quickly find specific assignments
+                  </li>
+                  <li className="flex items-start">
+                    <svg className="h-5 w-5 mr-2 mt-0.5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    You can edit assignment details until students start submitting
+                  </li>
+                  <li className="flex items-start">
+                    <svg className="h-5 w-5 mr-2 mt-0.5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Delete assignments only if no students have submitted yet
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
           {/* Search Bar */}
           <div className="mt-6">
             <div className="max-w-md">
@@ -272,7 +360,11 @@ export default function AssignedExercises() {
                           <svg className="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                           </svg>
-                          {assignment.repetitions} repetitions
+                          {assignment.isUnlimited ? (
+                            <span>Unlimited repetitions</span>
+                          ) : (
+                            <span>{assignment.repetitions} repetitions</span>
+                          )}
                         </div>
                         <div className="flex items-center text-sm text-gray-500">
                           <svg className="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
